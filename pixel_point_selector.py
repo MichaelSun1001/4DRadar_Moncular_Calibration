@@ -184,8 +184,8 @@ def main():
     # limit_points = False  # Set to True to limit points to 3, False for no limit
 
     # Set input and output paths
-    img_path = r'C:\BaiduSyncdisk\Calibration\4DRadar_Moncular_Calibration\4DRadar_Moncular_Calibration\image\frame_100.jpg'
-    output_dir = r'C:\BaiduSyncdisk\Calibration\4DRadar_Moncular_Calibration\4DRadar_Moncular_Calibration\image\csv'
+    img_path = r'C:\Users\10137\Desktop\4DRadar_Moncular_Calibration\dataset\image\frame_59.jpg'
+    output_dir = r'C:\Users\10137\Desktop\4DRadar_Moncular_Calibration\dataset\image\csv'
 
     # Load image
     img = cv2.imread(img_path)
