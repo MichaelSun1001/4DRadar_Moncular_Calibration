@@ -16,7 +16,7 @@ def save_point_cloud_data_to_csv(data, csv_filename):
 def plot_point_cloud(frame_data, output_path, frame_number):
     """Plot and save the point cloud for the current frame"""
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot(111, projection="3d")
 
     xs = frame_data["X"]
     ys = frame_data["Y"]
@@ -24,16 +24,16 @@ def plot_point_cloud(frame_data, output_path, frame_number):
     snrs = frame_data["SNR"]
     indices = frame_data.index
 
-    scatter = ax.scatter(xs, ys, zs, c=snrs, cmap="viridis", marker='o')
+    scatter = ax.scatter(xs, ys, zs, c=snrs, cmap="viridis", marker="o")
 
     for i, (x, y, z) in enumerate(zip(xs, ys, zs)):
-        ax.text(x, y, z, f'{indices[i]}', fontsize=9)
+        ax.text(x, y, z, f"{indices[i]}", fontsize=9)
 
-    plt.colorbar(scatter, ax=ax, label='SNR')
-    ax.set_xlabel('X Coordinate')
-    ax.set_ylabel('Y Coordinate')
-    ax.set_zlabel('Z Coordinate')
-    ax.set_title(f'Point Cloud Data for Frame {frame_number}')
+    plt.colorbar(scatter, ax=ax, label="SNR")
+    ax.set_xlabel("X Coordinate")
+    ax.set_ylabel("Y Coordinate")
+    ax.set_zlabel("Z Coordinate")
+    ax.set_title(f"Point Cloud Data for Frame {frame_number}")
 
     frame_filename = f"frame_{frame_number}_point_cloud.png"
     frame_filepath = os.path.join(output_path, frame_filename)
@@ -66,7 +66,7 @@ def find_representative_point_with_distances(frame_data):
         return None
 
     # Compute distance matrix
-    dist_matrix = distance.cdist(coords, coords, 'euclidean')
+    dist_matrix = distance.cdist(coords, coords, "euclidean")
     np.fill_diagonal(dist_matrix, np.inf)  # Ignore self-distances
 
     # Determine the number of closest points to consider
@@ -97,7 +97,7 @@ def find_representative_point_with_kmeans(frame_data):
     return representative_point
 
 
-def main(input_csv, output_directory, method='weighted_average'):
+def main(input_csv, output_directory, method="weighted_average"):
     """Main function to process point cloud data and generate output files"""
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
@@ -109,7 +109,7 @@ def main(input_csv, output_directory, method='weighted_average'):
     df.columns = df.columns.str.strip()
 
     # Group data by frame
-    frames = df.groupby('Frame')
+    frames = df.groupby("Frame")
 
     representative_points = []
 
@@ -120,43 +120,46 @@ def main(input_csv, output_directory, method='weighted_average'):
         plot_point_cloud(frame_data, output_directory, frame)
 
         # Calculate the representative point using the selected method
-        if method == 'weighted_average':
+        if method == "weighted_average":
             representative_point = find_representative_point_with_weighted_average(
-                frame_data)
-        elif method == 'distances':
-            representative_point = find_representative_point_with_distances(
-                frame_data)
-        elif method == 'kmeans':
-            representative_point = find_representative_point_with_kmeans(
-                frame_data)
+                frame_data
+            )
+        elif method == "distances":
+            representative_point = find_representative_point_with_distances(frame_data)
+        elif method == "kmeans":
+            representative_point = find_representative_point_with_kmeans(frame_data)
         else:
             raise ValueError(f"Unknown method: {method}")
 
         if representative_point is not None:
-            representative_points.append({
-                "Frame": frame,
-                "Rep_X": representative_point[0],
-                "Rep_Y": representative_point[1],
-                "Rep_Z": representative_point[2]
-            })
+            representative_points.append(
+                {
+                    "Frame": frame,
+                    "Rep_X": representative_point[0],
+                    "Rep_Y": representative_point[1],
+                    "Rep_Z": representative_point[2],
+                }
+            )
         else:
             print(
-                f"Frame {frame} does not have enough points to calculate a representative point.")
+                f"Frame {frame} does not have enough points to calculate a representative point."
+            )
 
     # Save representative points data to a new CSV file
-    rep_csv_filename = os.path.join(
-        output_directory, "representative_points.csv")
+    rep_csv_filename = os.path.join(output_directory, "representative_points.csv")
     save_point_cloud_data_to_csv(representative_points, rep_csv_filename)
 
 
 if __name__ == "__main__":
     # Set input CSV file path and output directory
-    input_csv = r"C:\Users\sunaxiang\Desktop\Radar_Moncular_Calibration\4DRadar_Moncular_Calibration\dataset\pointcloud\csv\pointcloud.csv"
-    output_path = r"C:\Users\sunaxiang\Desktop\Radar_Moncular_Calibration\4DRadar_Moncular_Calibration\dataset\pointcloud\csv"
+    input_csv = r"C:\Users\10137\Desktop\4DRadar_Moncular_Calibration\dataset\pointcloud\csv\pointcloud.csv"
+    output_path = (
+        r"C:\Users\10137\Desktop\4DRadar_Moncular_Calibration\dataset\pointcloud\csv"
+    )
 
     # Specify method: 'weighted_average', 'distances', or 'kmeans'
     # Change to 'distances' or 'kmeans' to use the other methods
-    method = 'distances'
+    method = "distances"
 
     main(input_csv, output_path, method)
 

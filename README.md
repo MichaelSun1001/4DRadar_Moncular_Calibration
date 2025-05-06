@@ -1,7 +1,7 @@
 使用流程：
 1、pixel_point_selector.py选取图片点
 2、extract_incenter.py提取所有图片点的内心点
-3、使用process_pointcloud_data.py、point_cloud_representative_calculator.py选取角反射器点云。
+3、使用process_pointcloud_data.py（用来处理采集的电鱼CSV文件格式，变成标准的便于处理的格式）、point_cloud_representative_calculator.py选取角反射器点云。
 4、使用calibration.py、或calibration_test.py进行标定，得到外参矩阵
 5、使用point_cloud_project_to_image .py进行点云的投影
 
